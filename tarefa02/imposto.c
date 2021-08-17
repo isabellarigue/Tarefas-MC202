@@ -10,62 +10,41 @@ void le_matriz(double matriz[][MESES], int n) {
             scanf("%lf", &matriz[i][j]);
 }
 
+double calculo_por_faixas(double rendimento, double min, double max, double aliquota) {
+    double imposto=0;
+
+    if (rendimento > min){
+        if (rendimento <= max)
+            imposto += (rendimento - min)*aliquota;
+        else 
+            imposto += (max - min)*aliquota;
+    }
+
+    return imposto;   
+}
+
 void calculo_valor_retido(double matriz[][MESES], double matriz_modificada[][15], int i, int j) {
     double rendimento, imposto=0;
     rendimento = matriz[i][j];
 
-    //if (rendimento <=  1499,15)
-    //    matriz_modificada[i][j] = 0;
-    if (rendimento > 1499.15){ //fazer função desses negocios?
-        if (rendimento <= 2246.75)
-            imposto = (rendimento - 1499.15)*0.075;
-        else 
-            imposto = (2246.75 - 1499.15)*0.075;
-    }
-    if (rendimento > 2246.75){
-        if (rendimento <= 2995.70)
-            imposto += (rendimento - 2246.75)*0.15;
-        else 
-            imposto += (2995.70 - 2246.75)*0.15;
-    }
-    if (rendimento > 2995.70){
-        if (rendimento <= 3743.19)
-            imposto += (rendimento - 2995.70)*0.225;
-        else 
-            imposto += (3743.19 - 2995.70)*0.225;
-    }
-    if (rendimento > 3743.19){
+    imposto += calculo_por_faixas(rendimento, 1499.15, 2246.75, 0.075);
+    imposto += calculo_por_faixas(rendimento, 2246.75, 2995.70, 0.15);
+    imposto += calculo_por_faixas(rendimento, 2995.70, 3743.19, 0.225);
+    if (rendimento > 3743.19)
         imposto += (rendimento - 3743.19)*0.275;
-    }
-    matriz_modificada[i][j] = imposto; // [i + 1] devido a linha inicial com os meses
-    matriz_modificada[i][12] += imposto; //soma dos valores retidos
 
+    matriz_modificada[i][j] = imposto; 
+    matriz_modificada[i][12] += imposto; //soma dos valores retidos
 }
 
 void calculo_valor_anual(double matriz_modificada[][15], int i, double base_calculo) {
     double imposto=0;
 
-    if (base_calculo > 18000){ //fazer função desses negocios?
-        if (base_calculo <= 26400)
-            imposto = (base_calculo - 18000)*0.075;
-        else 
-            imposto = (26400 - 18000)*0.075;
-    }
-    if (base_calculo > 26400){
-        if (base_calculo <= 36000)
-            imposto += (base_calculo - 26400)*0.15;
-        else 
-            imposto += (36000 - 26400)*0.15;
-    }
-    if (base_calculo > 36000){
-        if (base_calculo <= 44400)
-            imposto += (base_calculo - 36000)*0.225;
-        else 
-            imposto += (44400 - 36000)*0.225;
-    }
-    if (base_calculo > 44400){
+    imposto += calculo_por_faixas(base_calculo, 18000, 26400, 0.075);
+    imposto += calculo_por_faixas(base_calculo, 26400, 36000, 0.15);
+    imposto += calculo_por_faixas(base_calculo, 36000, 44400, 0.225);
+    if (base_calculo > 44400)
         imposto += (base_calculo - 44400)*0.275;
-    }
 
     matriz_modificada[i][13] = imposto;
 }
@@ -75,12 +54,11 @@ void modifica_matriz(double matriz[][MESES], double matriz_modificada[][15], int
     double rendimento, base_calculo;
     for (i = 0; i < n; i++){
         rendimento = 0;
-        for (j = 0; j < 12; j++){ // transformar essa parte em função?
+        for (j = 0; j < 12; j++){ 
             rendimento += matriz[i][j];
             calculo_valor_retido(matriz, matriz_modificada, i, j);
         }
         base_calculo = rendimento - abatimentos[i]; 
-        //printf("Base de calculo %d %lf\n", i, base_calculo); //tirar depois
         calculo_valor_anual(matriz_modificada, i, base_calculo);
         matriz_modificada[i][14] = matriz_modificada[i][13] - matriz_modificada[i][12]; // calculo do ajuste
     }
