@@ -9,6 +9,7 @@ void separa_nomes(char estudantes[][MAX_CHAR], int n, char nomes[][MAX_CHAR], ch
 
     int i, k, eh_nome, contador;
     char estudante[MAX_CHAR];
+    
     for (i = 0; i < n; i++){
         strcpy(estudante, estudantes[i]);
         eh_nome = 1;
@@ -96,6 +97,7 @@ int main() {
         ordem_alfabetica(sobrenomes, estudantes, n);
         imprime_iguais(sobrenomes, n, estudantes);
     }
+
 
     return 0;
 }
