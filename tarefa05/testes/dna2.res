@@ -1,0 +1,4 @@
+ID: 	0	0	1	2	0	0	0	0	0	1	1	0	0	1	0	0	1	1	1	2	1	2	3	2	4	2	3	1	3	0	2	3	4	2	3	1	2	4	2	4	2	3	5	5	3	5	4	6	3	6	5	7	1	2	4	8	3	3	9	5	10	4	4	1	7	4	5	4	3	4	5	11	5	5	5	8	2	5	6	7	6	7	6	0	8	6	6	3	1	9	7	8	6	9	6	6	7	9	10	8
+DNA:	H	A	A	A	E	M	G	J	K	K	G	F	B	E	D	I	H	I	F	I	J	H	I	K	I	G	H	B	K	L	E	A	K	J	E	L	F	A	B	H	L	F	H	I	G	A	G	A	L	H	G	H	D	D	F	H	J	D	H	F	H	J	L	M	A	E	L	D	B	B	E	H	K	B	D	A	M	J	E	E	L	L	G	C	E	D	I	M	C	E	D	D	F	D	B	K	K	A	A	K
+    	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|
+RNA: 	T	Y	Y	Y	R	Q	S	N	O	O	S	U	Z	R	W	V	T	V	U	V	N	T	V	O	V	S	T	Z	O	P	R	Y	O	N	R	P	U	Y	Z	T	P	U	T	V	S	Y	S	Y	P	T	S	T	W	W	U	T	N	W	T	U	T	N	P	Q	Y	R	P	W	Z	Z	R	T	O	Z	W	Y	Q	N	R	R	P	P	S	X	R	W	V	Q	X	R	W	W	U	W	Z	O	O	Y	Y	O
