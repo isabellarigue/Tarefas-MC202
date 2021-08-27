@@ -89,7 +89,7 @@ void alterar(Voo voos[], int qtd_voos, int numero_voo, double novo_valor) {
 
 int confere_voos(Voo voo1, Voo voo2, int periodo_ferias) { 
     int dias = diferenca_data(voo1.data, voo2.data);
-    if (dias >= 4 && dias < periodo_ferias)
+    if (dias >= 4 && dias <= periodo_ferias)
         return 1;
     else
         return 0;
