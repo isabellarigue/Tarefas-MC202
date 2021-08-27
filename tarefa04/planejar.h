@@ -32,7 +32,8 @@ void alterar(Voo voos[], int qtd_voos, int numero_voo, double novo_valor);
 // altera o valor de um voo
 
 int confere_voos(Voo voo1, Voo voo2, int periodo_ferias);
-// retorna verdadeiro se dois pares de voos são validos, ou seja, se as datas compreendem pelo menos quatro dias dentro do período de férias
+/* retorna verdadeiro se dois pares de voos são validos, ou seja, se as datas compreendem
+ pelo menos quatro dias dentro do período de férias */
 
 void planejar(Voo voos[], int qtd_voos, Data data_inicio, Data data_fim, char codigo_origem[]);
 /* imprime os codigos das passagens mais baratas de ida e de volta cujas datas compreendam 

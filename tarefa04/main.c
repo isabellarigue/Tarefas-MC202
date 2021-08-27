@@ -28,7 +28,7 @@ int main() {
         scanf("%s", tipo);
     }
 
-    //lendo o planejar
+    //lendo o planejamento
     scanf("%s", codigo_origem);
     data_inicio = ler_data(); 
     data_fim = ler_data();

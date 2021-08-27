@@ -52,7 +52,7 @@ int diferenca_data(Data data1, Data data2) {
     else if (data1.ano == data2.ano) //meses diferentes tb
         return (data2.dia + (ultimo_dia_do_mes(data1.mes) - data1.dia) + 1);
     else { //anos diferentes
-        dias = (ultimo_dia_do_mes(data1.mes) - data1.dia) + 1;
+        dias = (ultimo_dia_do_mes(data1.mes) - data1.dia + 1);
         for (i = data1.mes + 1; i <= 12; i++)
             dias += ultimo_dia_do_mes(i);
         if (data2.mes != 1){
