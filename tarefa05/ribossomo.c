@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct transcricao {
     int tamanho, *id;
@@ -92,5 +91,6 @@ int main() {
     free(transcricao.segmento_dna);
     free(transcricao.segmento_rna);
     free(transcricao.id);
+    
     return 0;
 }
