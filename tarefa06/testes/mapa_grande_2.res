@@ -1,5 +1,5 @@
-Total de Blocos: 4670912
-Tempo total: 11677280.00s
-Diamantes: 222406
-Ouros: 444858
-Ferros: 667267
+Total de Blocos: 2335456
+Tempo total: 5838640.00s
+Diamantes: 111200
+Ouros: 222432
+Ferros: 333632
