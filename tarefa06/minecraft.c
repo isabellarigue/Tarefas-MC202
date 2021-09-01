@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "minecraft.h"
 
 int **calcularAltitudes(int m, int n, int seed){
@@ -11,11 +10,13 @@ int **calcularAltitudes(int m, int n, int seed){
     for (x = 0; x < m; x++)
         altitudes[x] = malloc(n * sizeof(int));
     
+    //calculando as altitudes
     for (x = 0; x < m; x++)
         for (z = 0; z < n; z++){
             altitude = (seed * (202 + x + z) + 12345 + x + z) % 256;
             altitudes[x][z] = altitude;
         }
+        
     return altitudes;
 }
 
@@ -23,7 +24,7 @@ Bloco ***criarMundo(int m, int n, int **altitudes, int seed) {
     Bloco ***mundo;
     int x, z, y;
 
-    //alocando a matriz3d
+    //alocando a matriz 3d
     mundo = malloc(m * sizeof(Bloco **));
     for (x = 0; x < m; x++) {
         mundo[x] = malloc(n * sizeof(Bloco *));
@@ -65,7 +66,7 @@ double explorarMundo(
                 else
                     continue;
             }
-    
+            
     tempo_total = tempoPorBloco * *qtdBlocos;
     return tempo_total;
 }

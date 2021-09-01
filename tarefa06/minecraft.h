@@ -1,8 +1,6 @@
-struct Bloco{
+typedef struct Bloco{
     int M;
-};
-
-typedef struct Bloco Bloco;
+}Bloco;
 
 /**
  * Cria uma matriz de altitudes representando
@@ -26,5 +24,15 @@ double explorarMundo(
     Bloco ***mundo, int m, int n, int **altitudes, double tempoPorBloco,
     int *qtdDiamante, int *qtdOuro, int *qtdFerro, int *qtdBlocos);
 
+/**
+ * Libera uma matriz de duas
+ * dimensoes alocada dinamicamente.
+ **/
+void libera_matriz2d(int **matriz, int m);
 
+/**
+ * Libera matriz de tres dimensoes
+ * de blocos alocada dinamicamente.
+ **/
+void libera_matriz3d(Bloco ***matriz, int m, int n);
 
