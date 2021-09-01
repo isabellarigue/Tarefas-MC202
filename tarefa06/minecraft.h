@@ -1,8 +1,8 @@
-typedef struct {
-    // você é livre pra definir o bloco aqui
-} Bloco;
+struct Bloco{
+    int M;
+};
 
-// é obrigatório implementar os protótipos seguintes
+typedef struct Bloco Bloco;
 
 /**
  * Cria uma matriz de altitudes representando
@@ -26,5 +26,5 @@ double explorarMundo(
     Bloco ***mundo, int m, int n, int **altitudes, double tempoPorBloco,
     int *qtdDiamante, int *qtdOuro, int *qtdFerro, int *qtdBlocos);
 
-// você pode adicionar e implementar outros protótipos
-// que forem necessários
+
+
