@@ -2,6 +2,7 @@ tarefa*/testes/*.out
 tarefa*/*.o
 tarefa*/*.obj
 tarefa*/*.exe
+tarefa*/*.vscode
 
 tarefa00/bomdia
 tarefa00/boanoite
