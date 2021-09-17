@@ -5,8 +5,14 @@ LDFLAGS = -lm
 
 all: boate
 
-boate: boate.c
-	gcc $(CFLAGS) boate.c -o boate $(LDFLAGS)
+boate: boate.o fila.o
+	gcc $(CFLAGS) boate.o fila.o -o boate $(LDFLAGS)
+
+boate.o: boate.c fila.h
+	gcc $(CFLAGS) -c boate.c
+
+fila.o: fila.c fila.h
+	gcc $(CFLAGS) -c fila.c
 
 clean:
-	rm -f boate
+	rm -f planejar planejar.o main.o
