@@ -36,7 +36,7 @@ p_no remove_elemento(p_no lista, p_no elemento);
 da lista/fila, repete-se esse processo ate que a pessoa atras do fiscal esteja vacinada */
 p_no fiscal(p_no lista, p_no fiscal);
 
-/* imprime cada elemento da lista, no formato "documento profissão status de vacinação" */
+/* imprime cada elemento da lista, no formato "documento profissão status_de_vacinação" */
 void imprime(p_no lista);
 
 /* libera a memoria alocada para a lista, destruindo-a */

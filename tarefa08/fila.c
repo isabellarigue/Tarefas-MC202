@@ -14,6 +14,8 @@ int lista_vazia(p_no lista) {
 p_no cria_pessoa(int documento, char profissao[26], char status_vacinacao[13]) {
     p_no novo;
     novo = malloc(sizeof(No));
+    if (novo == NULL) //verificando se há memoria suficiente
+        exit(1);
     novo->documento = documento;
     strcpy(novo->profissao, profissao);
     strcpy(novo->status_vacinacao, status_vacinacao);

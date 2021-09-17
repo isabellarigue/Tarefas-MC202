@@ -11,7 +11,6 @@ int main() {
     while(scanf("%d %s %s", &documento, profissao, status_vacinacao) != EOF) {
         pessoa = cria_pessoa(documento, profissao, status_vacinacao);
         if (primeira) {
-            lanterna = pessoa;
             lista = adicionar_inicio(lista, pessoa, &lanterna);
             primeira = 0;
         } else {
@@ -22,7 +21,7 @@ int main() {
             else {
                 if (strcmp(pessoa->profissao, "funcionario") == 0)
                     lista = adicionar_final(lista, pessoa, &lanterna); 
-                else { //pessoas comuns ou fiscal
+                else { //pessoa comum ou fiscal
                     lista = segue_a_fila(lista, pessoa, &lanterna); 
                     if (strcmp(pessoa->profissao, "fiscal") == 0)
                         lista = fiscal(lista, pessoa);
