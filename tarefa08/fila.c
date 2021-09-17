@@ -7,7 +7,7 @@ p_no criar_lista() {
     return NULL;
 }
 
-int lista_vazia(p_no lista) { //precisa?
+int lista_vazia(p_no lista) { 
     return (lista == NULL);
 }
 
@@ -24,8 +24,7 @@ int tem_privilegios(char profissao[26]) {
     if (strcmp(profissao, "coach") == 0 || strcmp(profissao, "ex-bbb") == 0 || strcmp(profissao, "filho-politico") == 0 || 
     strcmp(profissao, "herdeiro") == 0 || strcmp(profissao, "youtuber-financas") == 0)
         return 1;
-    else
-        return 0;
+    return 0;
 }
 
 p_no adicionar_inicio(p_no lista, p_no pessoa, p_no *lanterna) {
@@ -37,15 +36,15 @@ p_no adicionar_inicio(p_no lista, p_no pessoa, p_no *lanterna) {
 p_no adicionar_final(p_no lista, p_no pessoa, p_no *lanterna) {
     p_no atual;
     atual = lista;
-    while(atual->prox != NULL) //percorre a lista e para uma posição antes de NULL
+    while(atual->prox != NULL) //percorre ate o fim da lista
         atual = atual->prox;
     atual->prox = pessoa;
-    pessoa->prox = NULL;
+    pessoa->prox = NULL; //define a pessoa como a ultima da lista
     *lanterna = pessoa; 
     return lista;
 }
 
-p_no adicionar_meio(p_no lista, p_no pessoa, p_no *lanterna) {
+p_no segue_a_fila(p_no lista, p_no pessoa, p_no *lanterna) {
     p_no atual, aux;
     atual = lista;
     while(atual != *lanterna)
@@ -60,21 +59,19 @@ p_no adicionar_meio(p_no lista, p_no pessoa, p_no *lanterna) {
 p_no remove_elemento(p_no lista, p_no elemento) {
     p_no aux;
     aux = lista;
-    while(aux->prox != elemento) //percorre a lista e para uma posição antes do ponteiro elemento
+    while(aux->prox != elemento) //percorre a lista ate uma posição antes da do elemento
         aux = aux->prox; 
-    aux->prox = elemento->prox; //o nó auxiliar passa a apontar para o nó que o nó excluido apontava
-    free(elemento); //apaga o nó desejado
+    aux->prox = elemento->prox; 
+    free(elemento); 
     return lista;
 }
 
 p_no fiscal(p_no lista, p_no fiscal) {
     p_no proximo;
-    if (fiscal->prox != NULL) {
+    proximo = fiscal->prox;
+    while (proximo != NULL && strcmp(proximo->status_vacinacao, "nao-vacinado") == 0) {
+        lista = remove_elemento(lista, proximo);
         proximo = fiscal->prox;
-        while (! lista_vazia(lista) && strcmp(proximo->status_vacinacao, "nao-vacinado") == 0) {
-            lista = remove_elemento(lista, proximo);
-            proximo = fiscal->prox;
-        }
     }
     return lista;
 }
