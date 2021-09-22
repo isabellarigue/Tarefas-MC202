@@ -17,7 +17,7 @@ p_no criar_lista_circular_dupla_com_cabeca() {
     return cabeca;
 }
 
-p_no inserir_elemento_lista_circular_dupla(p_no lista, int x) { //lista circular dupla com cabeça
+p_no inserir_elemento_lista_circular_dupla(p_no lista, int x) { //lista com cabeça
     p_no novo;
     novo = malloc(sizeof(No));
     novo->dado = x;
@@ -25,26 +25,26 @@ p_no inserir_elemento_lista_circular_dupla(p_no lista, int x) { //lista circular
     novo->prox = lista->prox;
     lista->prox = novo;
 
-    novo->ant = lista; //o anterior seria a cabeça
+    novo->ant = lista; //o anterior é a cabeça
     novo->prox->ant = novo;
 
     return lista;
 }
 
-//retirar elemento 
+//remove o elemento n posições a direita de quem jogou o dado, considerando a formação do circulo 
 p_no remove_a_direita(p_no lista, int n, int *escolhido) {
-    p_no anterior = lista->ant; //o anterior começa sendo o primeiro colocado na lista
+    p_no elemento = lista->ant; //o elemento começa sendo o ponteiro mais antigo colocado na lista, ou seja, quem jogou o dado
     
     for (int i = 0; i < n; i++) {
-        if (anterior->ant == lista)
-            anterior = anterior->ant->ant; //temos que pular a cabeça
+        if (elemento->ant == lista)
+            elemento = elemento->ant->ant; //ignorando a cabeça
         else
-            anterior = anterior->ant;
+            elemento = elemento->ant;
     }
-    anterior->ant->prox = anterior->prox;
-    anterior->prox->ant = anterior->ant;
-    *escolhido = anterior->dado;
-    free(anterior);
+    elemento->ant->prox = elemento->prox;
+    elemento->prox->ant = elemento->ant;
+    *escolhido = elemento->dado;
+    free(elemento);
      
     if (lista->prox == lista) {
         free(lista); //liberando a cabeça
@@ -53,23 +53,23 @@ p_no remove_a_direita(p_no lista, int n, int *escolhido) {
     return lista;    
 }
 
+//remove o elemento n posições a esquerda de quem jogou o dado, considerando a formação do circulo
 p_no remove_a_esquerda(p_no lista, int n, int *escolhido) {
-    p_no posterior = lista->ant; //o posterior começa sendo o primeiro colocado na lista
+    p_no elemento = lista->ant; //o elemento começa sendo o ponteiro mais antigo colocado na lista, ou seja, quem jogou o dado
 
     if (n != 0) {
-        posterior = posterior->prox->prox; //temos que pular a cabeça
+        elemento = elemento->prox->prox; //ignorando a cabeça
         for (int i = 1; i < n; i++) {
-            if (posterior->prox == lista)
-                posterior = posterior->prox->prox; //temos que pular a cabeça
+            if (elemento->prox == lista)
+                elemento = elemento->prox->prox; //ignorando a cabeça
             else
-                posterior = posterior->prox;
+                elemento = elemento->prox;
         }
     }
-
-    posterior->ant->prox = posterior->prox;
-    posterior->prox->ant = posterior->ant;
-    *escolhido = posterior->dado;
-    free(posterior);
+    elemento->ant->prox = elemento->prox;
+    elemento->prox->ant = elemento->ant;
+    *escolhido = elemento->dado;
+    free(elemento);
 
     if (lista->prox == lista) {
         free(lista); //liberando a cabeça
@@ -78,29 +78,19 @@ p_no remove_a_esquerda(p_no lista, int n, int *escolhido) {
     return lista;    
 }
 
-//criar lista normal para cada equipe
 p_no cria_lista_encadeada() {
     return NULL;
 }
 
 p_no insere_elemento_lista_encadeada(p_no lista, int dado) {
-    p_no elemento = malloc(sizeof(No)); //seria melhor criar outro no?
+    p_no elemento = malloc(sizeof(No)); 
     elemento->dado = dado;
     elemento->prox = lista;
     return elemento;
 }
 
-p_no busca_elemento(p_no lista, int x) {
-    p_no atual;
-    for (atual = lista; atual != NULL; atual = atual->prox) 
-        if (atual->dado == x)
-            return atual;
-    return NULL; 
-}
-
-p_no remove_elemento(p_no lista, int x) {
-    p_no aux, elemento_ptr;
-    elemento_ptr = busca_elemento(lista, x);
+p_no remove_elemento(p_no lista, p_no elemento_ptr) { //função para lista encadeada normal
+    p_no aux;
 
     if (lista->prox != NULL) {
         if (lista != elemento_ptr) {
@@ -109,26 +99,29 @@ p_no remove_elemento(p_no lista, int x) {
                 aux = aux->prox; 
             aux->prox = elemento_ptr->prox;
         } else 
-            lista = lista->prox; //retira do inicio da lista
+            lista = lista->prox; //remove do inicio da lista
         free(elemento_ptr); 
         return lista;
-    } else {
-        free(lista);
+    } else { //so resta um unico elemento na lista para ser liberado/removido
+        free(lista); 
         return NULL;
     }
 }
 
-void imprime_ordenado(p_no lista) {
-    p_no atual;
+void imprime_ordenado(p_no lista) { 
+    p_no atual, menor_ptr;
     int menor;
 
     while (lista != NULL) {
         menor = lista->dado;
+        menor_ptr = lista;
         for (atual = lista->prox; atual != NULL; atual = atual->prox) {
-            if (atual->dado < menor)
+            if (atual->dado < menor) {
                 menor = atual->dado;
+                menor_ptr = atual;
+            }
         }
-        lista = remove_elemento(lista, menor);
+        lista = remove_elemento(lista, menor_ptr);
         printf("%d ", menor);
     }
 }
@@ -143,14 +136,11 @@ int main() {
 
     scanf("%d", &m);
     for (i = 0; i < m; i++) {
-        scanf("%d", &altura); //agrupar?
+        scanf("%d", &altura); 
         lista = inserir_elemento_lista_circular_dupla(lista, altura);
     }
-    scanf("%d", &n);
-    lista = remove_a_esquerda(lista, n - 1, &escolhido);
-    time1 = insere_elemento_lista_encadeada(time1, escolhido);
-    i = 1;
-    while (lista != NULL) {
+
+    for (i = 0; lista != NULL; i++) {
         scanf("%d", &n);
         if (i % 2 == 0) {
             lista = remove_a_esquerda(lista, n - 1, &escolhido);
@@ -159,7 +149,6 @@ int main() {
             lista = remove_a_direita(lista, n - 1, &escolhido);
             time2 = insere_elemento_lista_encadeada(time2, escolhido);
         }
-        i++;
     }
 
     imprime_ordenado(time1);
