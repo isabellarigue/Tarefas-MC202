@@ -31,6 +31,12 @@ p_no inserir_elemento_lista_circular_dupla(p_no lista, int x) { //lista com cabe
     return lista;
 }
 
+void remove_elemento_lista_circular_dupla(p_no lista, p_no elemento) {
+    elemento->ant->prox = elemento->prox;
+    elemento->prox->ant = elemento->ant;
+    free(elemento);
+}
+
 //remove o elemento n posições a direita de quem jogou o dado, considerando a formação do circulo 
 p_no remove_a_direita(p_no lista, int n, int *escolhido) {
     p_no elemento = lista->ant; //o elemento começa sendo o ponteiro mais antigo colocado na lista, ou seja, quem jogou o dado
@@ -41,10 +47,8 @@ p_no remove_a_direita(p_no lista, int n, int *escolhido) {
         else
             elemento = elemento->ant;
     }
-    elemento->ant->prox = elemento->prox;
-    elemento->prox->ant = elemento->ant;
     *escolhido = elemento->dado;
-    free(elemento);
+    remove_elemento_lista_circular_dupla(lista, elemento);
      
     if (lista->prox == lista) {
         free(lista); //liberando a cabeça
@@ -66,10 +70,8 @@ p_no remove_a_esquerda(p_no lista, int n, int *escolhido) {
                 elemento = elemento->prox;
         }
     }
-    elemento->ant->prox = elemento->prox;
-    elemento->prox->ant = elemento->ant;
     *escolhido = elemento->dado;
-    free(elemento);
+    remove_elemento_lista_circular_dupla(lista, elemento);
 
     if (lista->prox == lista) {
         free(lista); //liberando a cabeça
@@ -83,17 +85,13 @@ void imprime_ordenado(p_no lista) {
     int menor;
 
     while (lista->prox != lista) {
-        menor = lista->prox->dado;
         menor_ptr = lista->prox;
         for (atual = lista->prox->prox; atual != lista; atual = atual->prox) {
-            if (atual->dado < menor) {
-                menor = atual->dado;
+            if (atual->dado < menor_ptr->dado)
                 menor_ptr = atual;
-            }
         }
-        menor_ptr->ant->prox = menor_ptr->prox; //removendo o menor elemento
-        menor_ptr->prox->ant = menor_ptr->ant;
-        free(menor_ptr);
+        menor = menor_ptr->dado;
+        remove_elemento_lista_circular_dupla(lista, menor_ptr);
         printf("%d ", menor);
     }
     free(lista); //liberando a cabeça
