@@ -78,52 +78,25 @@ p_no remove_a_esquerda(p_no lista, int n, int *escolhido) {
     return lista;    
 }
 
-p_no cria_lista_encadeada() {
-    return NULL;
-}
-
-p_no insere_elemento_lista_encadeada(p_no lista, int dado) {
-    p_no elemento = malloc(sizeof(No)); 
-    elemento->dado = dado;
-    elemento->prox = lista;
-    return elemento;
-}
-
-p_no remove_elemento(p_no lista, p_no elemento_ptr) { //função para lista encadeada normal
-    p_no aux;
-
-    if (lista->prox != NULL) {
-        if (lista != elemento_ptr) {
-            aux = lista;
-            while(aux->prox != elemento_ptr) //percorre a lista ate uma posição antes da do elemento
-                aux = aux->prox; 
-            aux->prox = elemento_ptr->prox;
-        } else 
-            lista = lista->prox; //remove do inicio da lista
-        free(elemento_ptr); 
-        return lista;
-    } else { //so resta um unico elemento na lista para ser liberado/removido
-        free(lista); 
-        return NULL;
-    }
-}
-
 void imprime_ordenado(p_no lista) { 
     p_no atual, menor_ptr;
     int menor;
 
-    while (lista != NULL) {
-        menor = lista->dado;
-        menor_ptr = lista;
-        for (atual = lista->prox; atual != NULL; atual = atual->prox) {
+    while (lista->prox != lista) {
+        menor = lista->prox->dado;
+        menor_ptr = lista->prox;
+        for (atual = lista->prox->prox; atual != lista; atual = atual->prox) {
             if (atual->dado < menor) {
                 menor = atual->dado;
                 menor_ptr = atual;
             }
         }
-        lista = remove_elemento(lista, menor_ptr);
+        menor_ptr->ant->prox = menor_ptr->prox; //removendo o menor elemento
+        menor_ptr->prox->ant = menor_ptr->ant;
+        free(menor_ptr);
         printf("%d ", menor);
     }
+    free(lista); //liberando a cabeça
 }
 
 int main() {
@@ -131,8 +104,8 @@ int main() {
     p_no lista, time1, time2;
 
     lista = criar_lista_circular_dupla_com_cabeca();
-    time1 = cria_lista_encadeada();
-    time2 = cria_lista_encadeada();
+    time1 = criar_lista_circular_dupla_com_cabeca();
+    time2 = criar_lista_circular_dupla_com_cabeca();
 
     scanf("%d", &m);
     for (i = 0; i < m; i++) {
@@ -144,10 +117,10 @@ int main() {
         scanf("%d", &n);
         if (i % 2 == 0) {
             lista = remove_a_esquerda(lista, n - 1, &escolhido);
-            time1 = insere_elemento_lista_encadeada(time1, escolhido);
+            time1 = inserir_elemento_lista_circular_dupla(time1, escolhido);
         } else {
             lista = remove_a_direita(lista, n - 1, &escolhido);
-            time2 = insere_elemento_lista_encadeada(time2, escolhido);
+            time2 = inserir_elemento_lista_circular_dupla(time2, escolhido);
         }
     }
 
