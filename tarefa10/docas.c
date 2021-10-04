@@ -115,12 +115,16 @@ void desempilhar(p_pilha pilha) {
 
 /* Realiza as ações de carregamento/descarregamento de um navio quando possível. 
 Se não for possível ele é adicionado ao fim da fila. */
-void carrega_descarrega(p_pilha *docas, int capacidade, int qtd_docas, char nome[], char tipo[], char mercadoria[], int qtd, p_fila fila, int remanescente, int *contador) {
+void carrega_descarrega(p_pilha *docas, int capacidade, int qtd_docas, char nome[], char tipo[],
+                        char mercadoria[], int qtd, p_fila fila, int remanescente, int *contador) {
+
     int i, total = 0;
     for (i = 0; i < qtd_docas; i++) {
         if (strcmp(tipo, "carrega") == 0) {
-            if (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0) { /* verificando se a doca n esta vazia e se tem a mercadoria no topo */
-                while (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0 && qtd > 0) { /* enquanto houver mercadoria e a qtd a ser carregada for > 0 */
+            /* verificando se a doca n esta vazia e se tem a mercadoria no topo */
+            if (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0) { 
+                /* enquanto houver mercadoria e a qtd a ser carregada for > 0 */
+                while (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0 && qtd > 0) { 
                     desempilhar(docas[i]);
                     qtd -= 1;
                     total += 1;
@@ -129,8 +133,10 @@ void carrega_descarrega(p_pilha *docas, int capacidade, int qtd_docas, char nome
                 break;
             }
         } else { /* descarrega */
-            if (docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) { /* verificando se há espaço para novos containeres na doca */
-                while ((docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) && qtd > 0) { /* enquanto houver espaço na doca e a qtd a ser descarregada for > 0 */
+            /* verificando se há espaço para novos containeres na doca */
+            if (docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) { 
+                /* enquanto houver espaço na doca e a qtd a ser descarregada for > 0 */
+                while ((docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) && qtd > 0) { 
                     empilhar(docas[i], mercadoria);
                     total += 1;
                     qtd -= 1;
@@ -187,7 +193,8 @@ int main() {
     quando chegar em um navio que é possível realizar a ação, o contador zera. Se o contador for igual ao tamanho 
     da fila, sabemos que a fila está se repetindo e portanto nunca irá esvaziar. */
     while (fila->ini != NULL) { 
-        carrega_descarrega(docas, capacidade, qtd_docas, fila->ini->nome, fila->ini->tipo, fila->ini->mercadoria, fila->ini->qtd, fila, 1, &contador);
+        carrega_descarrega(docas, capacidade, qtd_docas, fila->ini->nome, fila->ini->tipo, 
+                                fila->ini->mercadoria, fila->ini->qtd, fila, 1, &contador);
         i = tamanho_fila(fila);
         if (contador == i && i != 0) {
             printf("ALERTA: impossivel esvaziar fila, restam %d navios.", i);
