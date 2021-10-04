@@ -95,9 +95,9 @@ void empilhar(p_pilha pilha, char mercadoria[]) {
     strcpy(novo->mercadoria, mercadoria);
     novo->prox = pilha->topo;
     if (novo->prox != NULL)
-        novo->qtd_atual = novo->prox->qtd_atual + 1;
+        novo->qtd_atual = novo->prox->qtd_atual + 1; //é somado 1 na quantiade atual de containeres da doca
     else
-        novo->qtd_atual = 1;
+        novo->qtd_atual = 1; //se esse for o primeiro container da doca, a quantidade atual é 1
     pilha->topo = novo;
 }
 
@@ -107,44 +107,44 @@ void desempilhar(p_pilha pilha) {
     free(topo);
 }
 
-void carrega_descarrega(p_pilha *docas, int capacidade, int qtd_docas, char nome[], char tipo[], char mercadoria[], int qtd, p_fila fila, int teste) {
-    int i, total;
+void carrega_descarrega(p_pilha *docas, int capacidade, int qtd_docas, char nome[], char tipo[], char mercadoria[], int qtd, p_fila fila, int remanescente) {
+    int i, total = 0;
     for (i = 0; i < qtd_docas; i++) {
-        total = 0;
         if (strcmp(tipo, "carrega") == 0) {
-            if (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0) {
-                while (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0 && qtd > 0) { //se houver mercadoria
+            if (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0) { // verificando se a doca n esta vazia e se tem a mercadoria no topo
+                while (docas[i]->topo != NULL && strcmp(docas[i]->topo->mercadoria, mercadoria) == 0 && qtd > 0) { //enquanto houver mercadoria e a qtd a ser carregada for > 0
                     desempilhar(docas[i]);
                     qtd -= 1;
                     total += 1;
                 }
-            printf("%s carrega %s doca: %d conteineres: %d\n", nome, mercadoria, i, total);
-            break;
+                printf("%s carrega %s doca: %d conteineres: %d\n", nome, mercadoria, i, total);
+                break;
             }
         } else { //descarrega
-            if (docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) {
-                while ((docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) && qtd > 0) { //se ainda houver espaço na doca
+            if (docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) { //verificando se há espaço para novos containeres na doca
+                while ((docas[i]->topo == NULL || docas[i]->topo->qtd_atual < capacidade) && qtd > 0) { //enquanto houver espaço na doca e a qtd a ser descarregada for > 0
                     empilhar(docas[i], mercadoria);
                     total += 1;
                     qtd -= 1;
                 }
-            printf("%s descarrega %s doca: %d conteineres: %d\n", nome, mercadoria, i, total);
-            break;
+                printf("%s descarrega %s doca: %d conteineres: %d\n", nome, mercadoria, i, total);
+                break;
             }
         }
     }
     if (qtd > 0) //se ainda houver produtos para serem carregados ou descarregados
         enfileira(fila, nome, tipo, mercadoria, qtd);
 
-    if (teste)
+    if (remanescente)
         desenfileira(fila);
 }
 
 int main() {
-    int qtd_docas, capacidade, navios, i, qtd;
+    int qtd_docas, capacidade, navios, i, qtd, contador = 0;
     p_pilha *docas;
-    p_fila fila;
+    p_fila fila = criar_fila();
     char nome[21], tipo[11], mercadoria[21];
+    p_no atual;
 
     scanf("%d", &qtd_docas);
     scanf("%d", &capacidade);
@@ -152,18 +152,22 @@ int main() {
     docas = malloc(qtd_docas * sizeof(Pilha));
     for (i = 0; i < qtd_docas; i++)
         docas[i] = criar_pilha();
-    fila = criar_fila();
 
     for (i = 0; i < navios; i++) {
-        scanf("%s ", nome);
-        scanf("%s ", tipo);
-        scanf("%s", mercadoria);
-        scanf("%d", &qtd);
+        scanf("%s %s %s %d", nome, tipo, mercadoria, &qtd);
         carrega_descarrega(docas, capacidade, qtd_docas, nome, tipo, mercadoria, qtd, fila, 0); 
     }
     
-    while (fila->ini != NULL)  //esta considerando q a fila sempre esvazia
+    while (fila->ini != NULL && contador < navios*100) { 
         carrega_descarrega(docas, capacidade, qtd_docas, fila->ini->nome, fila->ini->tipo, fila->ini->mercadoria, fila->ini->qtd, fila, 1);
+        contador++;
+    }
+
+    i = 0;
+    for (atual = fila->ini; atual != NULL; atual = atual->prox) //contando quantos navios restam na fila
+        i++;
+    if (i != 0)
+        printf("ALERTA: impossivel esvaziar fila, restam %d navios.", i);
 
     for (i = 0; i < qtd_docas; i++)
         destruir_pilha(docas[i]);
