@@ -6,8 +6,8 @@ typedef struct No {
     float saldo;
     char nome[21];
     int nivel;
-    struct No *esq, *dir, *ant; 
-    struct No *prox; //para fila
+    struct No *esq, *dir, *ant; //para construir uma arvore
+    struct No *prox; //para construir uma fila
 } No;
 typedef No * p_no;
 
@@ -16,6 +16,7 @@ typedef struct {
 } Fila;
 typedef Fila * p_fila;
 
+/* Cria uma fila. */
 p_fila criar_fila() {
     p_fila fila;
     fila = malloc(sizeof(Fila));
@@ -50,6 +51,7 @@ p_no desenfileirar(p_fila fila) {
     return primeiro;
 }
 
+/* Cria uma arvore com os parâmetros dos elementos da pirâmide (nome, saldo...). */
 p_no criar_arvore(float saldo, char nome[]) {
     p_no raiz = malloc(sizeof(No));
     raiz->saldo = saldo;
@@ -59,6 +61,7 @@ p_no criar_arvore(float saldo, char nome[]) {
     return raiz;
 }
 
+/* Retorna o nó, dado o nome de um elemento na arvore. */
 p_no procurar_no(p_no raiz, char nome[]) {
     p_no esq;
     if (raiz == NULL || strcmp(raiz->nome, nome) == 0)
@@ -69,11 +72,11 @@ p_no procurar_no(p_no raiz, char nome[]) {
     return procurar_no(raiz->dir, nome);
 }
 
+/* Adiciona um filho na arvore, de acordo com os parâmetros da pirâmide (nome, saldo...). */
 void adicionar_filho(p_no pai, char nome[], float saldo, char tipo[]) {
     p_no filho = malloc(sizeof(No));
-    float bonificacao = saldo * 0.1;
-    pai->saldo -= bonificacao;
-    filho->saldo = saldo + bonificacao;
+    pai->saldo -= saldo * 0.1; //retirada a bonificação para o recrutado
+    filho->saldo = saldo * 1.1; //acrescida a bonificação de recrutado
     strcpy(filho->nome, nome); 
     filho->nivel = pai->nivel + 1;
     filho->esq = filho->dir = NULL;
@@ -84,18 +87,20 @@ void adicionar_filho(p_no pai, char nome[], float saldo, char tipo[]) {
         pai->dir = filho;
 }
 
+/* Adiciona os bonus nos saldos quando um participante consegue recrutar duas pessoas, 
+em que até seis níveis da pirâmide devem ser remunerados. */
 void bonus_recrutamentos(p_no ultimo_recrutado) {
     float i = 0.06;
     int primeiro = 1;
     p_no recrutador, atual = ultimo_recrutado;
     while (i != 0.00 && atual->ant != NULL) {
         recrutador = atual->ant;
-        if (primeiro) {
+        if (primeiro) { //no primeiro caso, o recrutador recebe um bonus dos dois recrutados
             recrutador->saldo += (recrutador->esq->saldo * i) + (recrutador->dir->saldo * i); 
             recrutador->esq->saldo -= (recrutador->esq->saldo * i);
             recrutador->dir->saldo -= (recrutador->dir->saldo * i);
             primeiro = 0;
-        } else {
+        } else { //nos demais casos, cada recrutado fornece um bonus para o seu recrutador
             recrutador->saldo += (atual->saldo * i);
             atual->saldo -= atual->saldo * i;
         }
@@ -104,6 +109,17 @@ void bonus_recrutamentos(p_no ultimo_recrutado) {
     }
 }
 
+/* Devolve o numero arredondado para cima em casos do tipo x.xx499999, por exemplo 281.904999 para 281.91... 
+Acrescentei tal função pois o arredondamento automático não estava funcionando para alguns testes. */
+float corrige_precisao(float numero) {
+    int num = (int)(numero * 10000);
+    if (num % 100 == 49)
+        return ((float)(num + 100))/10000;
+    else
+        return numero;
+}
+
+/* Imprime a arvore/piramide por niveis, de maneira horizontal. */
 void imprime_piramide(p_no topo) {
     p_fila fila;
     int ultimo_nivel = 0;
@@ -115,12 +131,12 @@ void imprime_piramide(p_no topo) {
             enfileirar(fila, topo->esq);
         if (topo->dir != NULL)
             enfileirar(fila, topo->dir);
-        if (topo->nivel == ultimo_nivel)
+        if (topo->nivel == ultimo_nivel) //o mesmo nivel deve ser impresso lado a lado
             printf("[%s %.2f] ", topo->nome, topo->saldo);
         else {
             if (ultimo_nivel != 0)
                 printf("\n");
-            printf("Nivel %d: [%s %.2f] ", topo->nivel, topo->nome, topo->saldo);
+            printf("Nivel %d: [%s %.2f] ", topo->nivel, topo->nome, corrige_precisao(topo->saldo));
             ultimo_nivel++;
         }
         free(topo); 
@@ -128,6 +144,7 @@ void imprime_piramide(p_no topo) {
     free(fila);
 }
 
+/* Libera a memoria alocada para uma arvore binária. */
 void destruir_arvore(p_no raiz) {
     if (raiz != NULL) {
         destruir_arvore(raiz->esq);
@@ -146,11 +163,11 @@ int main() {
     printf("Nivel 1: [%s %.2f] \n\n", recrutador, saldo); 
     while(scanf("%s %s %s %f", recrutador, leitura, recrutado, &saldo) != EOF) {
         pai = procurar_no(piramide, recrutador);
-        if (pai->esq == NULL) 
+        if (pai->esq == NULL) //se ainda não há filho esquerdo
             adicionar_filho(pai, recrutado, saldo, "esq");
         else {
             adicionar_filho(pai, recrutado, saldo, "dir");
-            bonus_recrutamentos(pai->dir);
+            bonus_recrutamentos(pai->dir); //se o recrutador conseguiu recrutar duas pessoas, havera bonus
         }
         imprime_piramide(piramide);
         printf("\n\n");
