@@ -113,7 +113,7 @@ void bonus_recrutamentos(p_no ultimo_recrutado) {
 Acrescentei tal função pois o arredondamento automático não estava funcionando para alguns testes. */
 float corrige_precisao(float numero) {
     int num = (int)(numero * 10000);
-    if (num % 100 == 49)
+    if (num % 100 >= 49 && num % 100 <= 51)
         return ((float)(num + 100))/10000;
     else
         return numero;
