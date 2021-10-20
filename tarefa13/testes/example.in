@@ -1,0 +1,16 @@
+3
+2
+ic.unicamp.br 143.106.7.54
+cecom.unicamp.br 143.106.2.133
+11
+GET ic.unicamp.br FROM 192.142.133.103
+GET ic.unicamp.br FROM 125.132.112.119
+GET cecom.unicamp.br FROM 125.132.112.119
+GET cecom.unicamp.br FROM 125.132.112.119
+GET ic.unicamp.br FROM 119.140.153.128
+GET ic.unicamp.br FROM 119.140.153.128
+GET cecom.unicamp.br FROM 125.132.112.119
+GET ic.unicamp.br FROM 119.140.153.128
+GET ic.unicamp.br FROM 115.12.195.25
+GET face.com FROM 205.132.225.25
+GET ic.unicamp.br FROM 200.192.32.14
