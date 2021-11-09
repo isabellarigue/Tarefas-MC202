@@ -167,8 +167,6 @@ int main () {
     M_sw = determinar_M(m);
     p_no *hash_sw = calloc(M_sw, sizeof(No)); //função para criar hash?
     for (i = 0; i < m; i++) {
-        if (i == 53)
-            teste = 2;
         scanf("%s", stop_word);
         inserir(hash_sw, stop_word, M_sw);
     }
