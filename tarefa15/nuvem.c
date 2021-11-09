@@ -158,7 +158,7 @@ void mergesort(p_no1 *v, int l, int r, int max) {
 }
 
 int main () {
-    int n, m, i, M_sw, M_p, ultima_frequencia, teste;
+    int n, m, i, M_sw, M_p, ultima_frequencia;
     char stop_word[10], palavra[50], ultima_palavra[50];
     p_no1 *ordena;
     scanf("%d", &n);
