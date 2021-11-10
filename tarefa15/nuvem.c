@@ -14,7 +14,7 @@ typedef struct {
 } No_palavras;
 typedef No_palavras * p_no1;
 
-int hash(char *chave, int M) {  //MUDAR PARA HASHING DUPLO
+int hash(char *chave, int M) {  
     int i, n = 0;
     for (i = 0; i < strlen(chave); i++)
         n = (256 * n + chave[i]) % M;
@@ -26,7 +26,7 @@ int encontrei(p_no *t, char *chave, int M) {
     if (t[n] != NULL && strcmp(t[n]->chave, chave) == 0)
         return 1;
     else {
-        for (int i = n + 1; i < M; i++) { //tem q voltar para o modulo M
+        for (int i = n + 1; i < M; i++) { //procurando nas posições posteriores de n
             if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
                 return 1;
         }
@@ -42,33 +42,35 @@ int retorna_indice(p_no *t, char *chave, int M) {
     int n = hash(chave, M); 
     if (t[n] != NULL && strcmp(t[n]->chave, chave) == 0)
         return n;
-    else
+    else {
         for (int i = n + 1; i < M; i++) {
             if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
                 return i;
         }
+        for (int i = 0; i < n; i++) { //tem q voltar para o modulo M
+            if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
+                return i;
+        }
+    }
     return 0; //para evitar warning
 }
 
 void inserir(p_no *t, char *chave, int M) { //testar depois com a tecnica do sizeof para ver o tamanho
     int indice = -1;
-    if (encontrei(t, chave, M))
+    if (encontrei(t, chave, M)) //juntar essas duas funções para otimizar
         indice = retorna_indice(t, chave, M);
-    if (indice != -1) 
+    if (indice != -1) //se ja estiver no hash
         t[indice]->frequencia += 1;
     else {
         int n = hash(chave, M); 
         p_no novo = malloc(sizeof(No));
         strcpy(novo->chave, chave);
         novo->frequencia = 1;
-        while (t[n] != 0)
+        while (t[n] != 0) //procurando um lugar livre
             n = (n + 1) % M;
         t[n] = novo;
     }
 }
-
-
-void destruir_hash(p_no t); 
 
 int eh_primo(int num) {
     for (int i = 2; i <= num / 2; i++) 
@@ -83,8 +85,26 @@ int determinar_M(int n) {
     return n;
 }
 
+char * arruma_palavra(char *palavra, p_no *hash_sw, int M_sw) {
+    int tamanho = strlen(palavra), j = 0;
+    if (tamanho == 1) //apenas um caractere n é considerado palavra
+        return "null";
+    else {
+        char *palavra_copia = malloc((tamanho + 1) * sizeof(char));
+        for (int i = 0; i < strlen(palavra); i++) 
+            if(isalpha(palavra[i])) //retirando - ' e outros caracteres especiais
+                palavra_copia[j++] = tolower(palavra[i]); 
+        palavra_copia[j] = '\0';
+        if ((strlen(palavra_copia)) <= 1) //verificando se ainda sobrou algo para ser a palavra
+            return "null";
+        if (encontrei(hash_sw, palavra_copia, M_sw)) //verificando se é stop word
+            return "null";
+        return palavra_copia;
+    }
+}
+
 void merge_frequencias(p_no1 *v, int l, int m, int r, int max, p_no *hash_palavras, int M) {
-    p_no1 aux[1000]; //vai ter q mudar e alocar dinamico
+    p_no1 *aux = malloc(max *sizeof(p_no1));
     int i = l, j = m + 1, k = 0;
     /*intercala*/
     while (i <= m && j <= r) {
@@ -103,6 +123,8 @@ void merge_frequencias(p_no1 *v, int l, int m, int r, int max, p_no *hash_palavr
     /*copia de volta para v*/
     for (i = l, k = 0; i <= r; i++, k++)
         v[i] = aux[k];
+
+    free(aux);
 }
 
 void mergesort_frequencias(p_no1 *v, int l, int r, int max, p_no *hash_palavras, int M) {
@@ -116,26 +138,8 @@ void mergesort_frequencias(p_no1 *v, int l, int r, int max, p_no *hash_palavras,
     }
 }
 
-char * arruma_palavra(char *palavra, p_no *hash_sw, int M_sw) {
-    int tamanho = strlen(palavra), j = 0;
-    if (tamanho == 1)
-        return "null";
-    else {
-        char *palavra_copia = malloc((tamanho + 1) * sizeof(char));
-        for (int i = 0; i < strlen(palavra); i++) 
-            if(isalpha(palavra[i])) 
-                palavra_copia[j++] = tolower(palavra[i]); 
-        palavra_copia[j] = '\0';
-        if ((strlen(palavra_copia)) <= 1)
-            return "null";
-        if (encontrei(hash_sw, palavra_copia, M_sw)) //é stop word
-            return "null";
-        return palavra_copia;
-    }
-}
-
-void merge(p_no1 *v, int l, int m, int r, int max) {
-    p_no1 aux[1000]; //vai ter q mudar e alocar dinamico
+void merge(p_no1 *v, int l, int m, int r, int max) { //em ordem alfabetica
+    p_no1 *aux = malloc(max * sizeof(p_no1)); 
     int i = l, j = m + 1, k = 0;
     /*intercala*/
     while (i <= m && j <= r)
@@ -151,9 +155,11 @@ void merge(p_no1 *v, int l, int m, int r, int max) {
     /*copia de volta para v*/
     for (i = l, k = 0; i <= r; i++, k++)
         v[i] = aux[k];
+    
+    free(aux);
 }
 
-void mergesort(p_no1 *v, int l, int r, int max) {
+void mergesort(p_no1 *v, int l, int r, int max) { //em ordem alfabetica
     int m = (l + r) / 2;
     if (l < r) {
         /*divisão*/
@@ -164,15 +170,54 @@ void mergesort(p_no1 *v, int l, int r, int max) {
     }
 }
 
-int main () {
-    int n, m, i, M_sw, M_p, ultima_frequencia;
-    char stop_word[50], palavra[50], ultima_palavra[50];
+void imprimir(p_no *hash_palavras, p_no1 *musica, int M_p, int i) {
+    int indice, k = 0, contador = 0, ultima_frequencia;
+    char ultima_palavra[50];
     p_no1 *ordena;
+
+    indice = retorna_indice(hash_palavras, musica[i - 1]->palavra, M_p); //começa pela ultima palavra do vetor musica, pois é a de maior frequencia depois do merge
+    ultima_frequencia = hash_palavras[indice]->frequencia;
+    strcpy(ultima_palavra, musica[i - 1]->palavra);
+
+    for (int j = i - 2; contador < 50; j--) { 
+        indice = retorna_indice(hash_palavras, musica[j]->palavra, M_p);
+        if(ultima_frequencia != hash_palavras[indice]->frequencia) { //se as palavras tiverem frequencias diferentes, n é preciso colocar em ordem alfabetica para imprimir
+            printf("%s %d\n", ultima_palavra, ultima_frequencia);
+            contador++;
+            ultima_frequencia = hash_palavras[indice]->frequencia;
+            strcpy(ultima_palavra, musica[j]->palavra);
+
+        } else { //se as palavras tiverem a msm frequencia, utiliza-se a ordem alfabetica
+            ordena = malloc(100 * sizeof(No_palavras)); 
+            while (ultima_frequencia == hash_palavras[indice]->frequencia && j >= 0) {
+                p_no1 novo = malloc(sizeof(No_palavras));
+                strcpy(novo->palavra, ultima_palavra);
+                ordena[k++] = novo; //adicionando em um novo vetor, para colocar em ordem alfabetica 
+                ultima_frequencia = hash_palavras[indice]->frequencia;
+                strcpy(ultima_palavra, musica[j]->palavra);
+                indice = retorna_indice(hash_palavras, musica[j--]->palavra, M_p); 
+            }
+            mergesort(ordena, 0, k - 1, k);
+            for (int c = 0; c < k && contador < 50; c++) {
+                printf("%s %d\n", ordena[c]->palavra, ultima_frequencia);
+                contador++;
+            }
+            free(ordena);
+            k = 0;
+            j++;
+            ultima_frequencia = hash_palavras[retorna_indice(hash_palavras, musica[j]->palavra, M_p)]->frequencia;
+        }
+    }    
+}
+
+int main () {
+    int n, m, i, M_sw, M_p;
+    char stop_word[50], palavra[50];
     scanf("%d", &n);
     scanf("%d", &m);
 
     M_sw = determinar_M(m);
-    p_no *hash_sw = calloc(M_sw, sizeof(No)); //função para criar hash?
+    p_no *hash_sw = calloc(M_sw, sizeof(No)); 
     for (i = 0; i < m; i++) {
         scanf("%s", stop_word);
         inserir(hash_sw, stop_word, M_sw);
@@ -182,60 +227,27 @@ int main () {
     M_p = determinar_M(n);
     p_no *hash_palavras = calloc(M_p, sizeof(No));
     p_no1 *musica = malloc(n * sizeof(No_palavras));
-    //while (strcmp(palavra, "(Hahahaha)") != 0) {
     while (scanf("%s", palavra) != EOF) {
         strcpy(palavra, arruma_palavra(palavra, hash_sw, M_sw));
-        if (strcmp(palavra, "null") != 0) { 
-            if (! encontrei(hash_palavras, palavra, M_p)) {
+        if (strcmp(palavra, "null") != 0) { //se de fato for uma palavra
+            if (! encontrei(hash_palavras, palavra, M_p)) { //se ainda não estiver no hash
                 p_no1 novo = malloc(sizeof(No_palavras));
                 strcpy(novo->palavra, palavra);
-                musica[i++] = novo;
+                musica[i++] = novo; //mantendo um vetor com a copia das palavras, para organizar futuramente pelas frequencias
             }
             inserir(hash_palavras, palavra, M_p);
         }
-        //scanf("%s", palavra); //teste
     }
 
-    // merge no vetor de hash (colocar em ordem de frequencia)
+    // coloca em ordem de frequencia as palavras
     mergesort_frequencias(musica, 0, i - 1, i, hash_palavras, M_p);
 
-    // imprimir as de maiores frequencias, fazer funçao:
-    int k = 0, contador = 0;
-    int indice = retorna_indice(hash_palavras, musica[i - 1]->palavra, M_p);
-    ultima_frequencia = hash_palavras[indice]->frequencia;
-    strcpy(ultima_palavra, musica[i - 1]->palavra);
-    for (int j = i - 2; j > i - 50; j--) { //colocar alfabetico as iguais!!!!
-        indice = retorna_indice(hash_palavras, musica[j]->palavra, M_p);
-        if(ultima_frequencia != hash_palavras[indice]->frequencia) {
-            printf("%s %d\n", ultima_palavra, ultima_frequencia);
-            contador++;
-            ultima_frequencia = hash_palavras[indice]->frequencia;
-            strcpy(ultima_palavra, musica[j]->palavra);
-        } else {
-            ordena = malloc(1000 * sizeof(No_palavras)); //200 é um valor chutado
-            while (ultima_frequencia == hash_palavras[indice]->frequencia && k < 200 && j >= 0) {
-                p_no1 novo = malloc(sizeof(No_palavras));
-                strcpy(novo->palavra, ultima_palavra);
-                ordena[k++] = novo;
-                ultima_frequencia = hash_palavras[indice]->frequencia;
-                strcpy(ultima_palavra, musica[j]->palavra);
-                indice = retorna_indice(hash_palavras, musica[j--]->palavra, M_p); //vai dar conflito
-            }
-            mergesort(ordena, 0, k - 1, k);
-            for (int c = 0; c < k && contador < 50; c++) {
-                printf("%s %d\n", ordena[c]->palavra, ultima_frequencia);
-                contador++;
-            }
-            free(ordena);
-            ultima_frequencia = hash_palavras[retorna_indice(hash_palavras, musica[j + 1]->palavra, M_p)]->frequencia;
-            j++;
-            k = 0;
-        }
-    }
-
+    imprimir(hash_palavras, musica, M_p, i);
 
     //liberar memoria
-
+    free(hash_sw);
+    free(hash_palavras);
+    free(musica);
 
     return 0;
 }
