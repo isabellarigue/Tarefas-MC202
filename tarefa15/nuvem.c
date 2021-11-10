@@ -135,7 +135,7 @@ int main () {
     scanf("%d", &n);
     scanf("%d", &m);
 
-    M_p = determinar_M(n);
+    M_p = determinar_M(10000);
     p_no *hash_palavras = calloc(M_p, sizeof(No));
     for (int k = 0; k < m; k++) {
         scanf("%s", stop_word);
