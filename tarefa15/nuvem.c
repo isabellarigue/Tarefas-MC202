@@ -73,7 +73,8 @@ void arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
             strcpy(palavra, "null");
             return;
         }
-        if (hash_palavras[retorna_indice(hash_palavras, palavra_copia, M_p)]->frequencia == -1) { //verificando se é stop word
+        int indice = retorna_indice(hash_palavras, palavra_copia, M_p);
+        if (indice > 0 && hash_palavras[indice]->frequencia == -1) { //verificando se é stop word
             strcpy(palavra, "null");
             return;
         }
