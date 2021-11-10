@@ -25,11 +25,16 @@ int encontrei(p_no *t, char *chave, int M) {
     int n = hash(chave, M); 
     if (t[n] != NULL && strcmp(t[n]->chave, chave) == 0)
         return 1;
-    else
-        for (int i = n + 1; i < M; i++) {
+    else {
+        for (int i = n + 1; i < M; i++) { //tem q voltar para o modulo M
             if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
                 return 1;
         }
+        for (int i = 0; i < n; i++) { //tem q voltar para o modulo M
+            if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
+                return 1;
+        }
+    }
     return 0;
 }
 
@@ -121,7 +126,9 @@ char * arruma_palavra(char *palavra, p_no *hash_sw, int M_sw) {
             if(isalpha(palavra[i])) 
                 palavra_copia[j++] = tolower(palavra[i]); 
         palavra_copia[j] = '\0';
-        if ((strlen(palavra_copia)) <= 1 || encontrei(hash_sw, palavra_copia, M_sw)) //é stop word
+        if ((strlen(palavra_copia)) <= 1)
+            return "null";
+        if (encontrei(hash_sw, palavra_copia, M_sw)) //é stop word
             return "null";
         return palavra_copia;
     }
@@ -159,7 +166,7 @@ void mergesort(p_no1 *v, int l, int r, int max) {
 
 int main () {
     int n, m, i, M_sw, M_p, ultima_frequencia;
-    char stop_word[10], palavra[50], ultima_palavra[50];
+    char stop_word[50], palavra[50], ultima_palavra[50];
     p_no1 *ordena;
     scanf("%d", &n);
     scanf("%d", &m);
@@ -192,7 +199,7 @@ int main () {
     // merge no vetor de hash (colocar em ordem de frequencia)
     mergesort_frequencias(musica, 0, i - 1, i, hash_palavras, M_p);
 
-    // imprimir as de maiores frequencias
+    // imprimir as de maiores frequencias, fazer funçao:
     int k = 0, contador = 0;
     int indice = retorna_indice(hash_palavras, musica[i - 1]->palavra, M_p);
     ultima_frequencia = hash_palavras[indice]->frequencia;
@@ -205,7 +212,7 @@ int main () {
             ultima_frequencia = hash_palavras[indice]->frequencia;
             strcpy(ultima_palavra, musica[j]->palavra);
         } else {
-            ordena = malloc(200 * sizeof(No_palavras)); //200 é um valor chutado
+            ordena = malloc(1000 * sizeof(No_palavras)); //200 é um valor chutado
             while (ultima_frequencia == hash_palavras[indice]->frequencia && k < 200 && j >= 0) {
                 p_no1 novo = malloc(sizeof(No_palavras));
                 strcpy(novo->palavra, ultima_palavra);
