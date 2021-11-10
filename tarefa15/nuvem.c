@@ -55,11 +55,13 @@ int retorna_indice(p_no *t, char *chave, int M) {
     return 0; //para evitar warning
 }
 
-void inserir(p_no *t, char *chave, int M) { //testar depois com a tecnica do sizeof para ver o tamanho
-    int indice = -1;
-    if (encontrei(t, chave, M)) //juntar essas duas funções para otimizar
+void inserir(p_no *t, char *chave, int M, int eh_stop_word) { 
+    int indice = 0;
+    if (! eh_stop_word) //se for o caso do hash das stop words, cada uma so vai estar uma vez mesmo
         indice = retorna_indice(t, chave, M);
-    if (indice != -1) //se ja estiver no hash
+    if (t[0]->chave != NULL && strcmp(t[0]->chave, chave) == 0)
+        t[0]->frequencia += 1;
+    if (indice != 0) //se ja estiver no hash
         t[indice]->frequencia += 1;
     else {
         int n = hash(chave, M); 
@@ -67,7 +69,7 @@ void inserir(p_no *t, char *chave, int M) { //testar depois com a tecnica do siz
         strcpy(novo->chave, chave);
         novo->frequencia = 1;
         while (t[n] != 0) //procurando um lugar livre
-            n = (n + 1) % M;
+            n = (n + (M/2) + 1) % M; //hashing duplo
         t[n] = novo;
     }
 }
@@ -143,7 +145,7 @@ void merge(p_no1 *v, int l, int m, int r, int max) { //em ordem alfabetica
     int i = l, j = m + 1, k = 0;
     /*intercala*/
     while (i <= m && j <= r)
-        if (strcmp(v[i]->palavra, v[j]->palavra) <= 0) //(v[i] <= v[j])
+        if (strcmp(v[i]->palavra, v[j]->palavra) <= 0) 
             aux[k++] = v[i++];
         else
             aux[k++] = v[j++];
@@ -203,8 +205,7 @@ void imprimir(p_no *hash_palavras, p_no1 *musica, int M_p, int i) {
                 contador++;
             }
             free(ordena);
-            k = 0;
-            j++;
+            k = 0, j++;
             ultima_frequencia = hash_palavras[retorna_indice(hash_palavras, musica[j]->palavra, M_p)]->frequencia;
         }
     }    
@@ -220,7 +221,7 @@ int main () {
     p_no *hash_sw = calloc(M_sw, sizeof(No)); 
     for (i = 0; i < m; i++) {
         scanf("%s", stop_word);
-        inserir(hash_sw, stop_word, M_sw);
+        inserir(hash_sw, stop_word, M_sw, 1);
     }
 
     i = 0;
@@ -235,7 +236,7 @@ int main () {
                 strcpy(novo->palavra, palavra);
                 musica[i++] = novo; //mantendo um vetor com a copia das palavras, para organizar futuramente pelas frequencias
             }
-            inserir(hash_palavras, palavra, M_p);
+            inserir(hash_palavras, palavra, M_p, 0);
         }
     }
 
