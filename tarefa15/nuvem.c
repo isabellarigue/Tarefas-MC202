@@ -120,7 +120,7 @@ void mergesort_frequencias(p_no *v, int l, int r, int max, p_no *hash_palavras, 
 
 int main () {
     int n, m, i = 0, M_p, indice;
-    char stop_word[50], palavra[50];
+    char stop_word[51], palavra[51];
     scanf("%d", &n);
     scanf("%d", &m);
 
@@ -145,6 +145,7 @@ int main () {
                 hash_palavras[indice]->frequencia += 1; 
         }
     }
+    
     mergesort_frequencias(musica, 0, i - 1, i, hash_palavras, M_p);
     for (int j = i - 1; j >= i - 50; j--) 
         printf("%s %d\n", musica[j]->chave, hash_palavras[retorna_indice(hash_palavras, musica[j]->chave, M_p)]->frequencia);
