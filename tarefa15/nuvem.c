@@ -64,7 +64,7 @@ void arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
     if (tamanho == 1 || palavra[0] == '\0') { //apenas um caractere n é considerado palavra
         strcpy(palavra, "null");
     } else {
-        char *palavra_copia = malloc((tamanho + 1) * sizeof(char));
+        char palavra_copia[51];
         for (int i = 0; palavra[i] != '\0'; i++) 
             if(isalpha(palavra[i])) //retirando - ' e outros caracteres especiais
                 palavra_copia[j++] = tolower(palavra[i]); 
