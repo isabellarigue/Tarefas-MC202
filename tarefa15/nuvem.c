@@ -4,7 +4,7 @@
 #include <string.h>
 
 typedef struct {
-    char chave[50];
+    char chave[51];
     int frequencia;
 } No;
 typedef No * p_no;
@@ -132,7 +132,7 @@ int main () {
     }
 
     p_no *musica = malloc(n * sizeof(No));
-    while (scanf("%s", palavra) != EOF) {
+    while (scanf(" %s", palavra) != EOF) {
         strcpy(palavra, arruma_palavra(palavra, hash_palavras, M_p));
         if (strcmp(palavra, "null") != 0) { //se de fato for uma palavra
             indice = retorna_indice(hash_palavras, palavra, M_p);
