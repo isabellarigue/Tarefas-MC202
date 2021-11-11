@@ -55,10 +55,10 @@ void inserir(p_no *t, char *chave, int M, int eh_stop_word) {
 }
 
 /* Retorna a palavra no formato pedido no enunciado, caso não seja possível devolve null. */
-char *arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
-    int tamanho = strlen(palavra), j = 0;
-    if (tamanho == 1 || palavra[0] == '\0') { //apenas um caractere não é considerado palavra
-        return "null";
+void arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
+    int j = 0;
+    if (strlen(palavra) == 1) { //apenas um caractere não é considerado palavra
+        strcpy(palavra, "null");
     } else {
         char palavra_copia[51];
         for (int i = 0; palavra[i] != '\0'; i++) 
@@ -66,15 +66,18 @@ char *arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
                 palavra_copia[j++] = tolower(palavra[i]); 
         palavra_copia[j] = '\0';
 
-        if ((strlen(palavra_copia)) <= 1)  //verificando se ainda sobrou algo para ser a palavra
-            return "null";
+        if ((strlen(palavra_copia)) <= 1) {  //verificando se ainda sobrou algo para ser a palavra
+            strcpy(palavra, "null");
+            return;
+        }
 
         int indice = retorna_indice(hash_palavras, palavra_copia, M_p);
-        if (indice > 0 && hash_palavras[indice]->frequencia == -1) //verificando se é stop word
-            return "null";
+        if (indice > 0 && hash_palavras[indice]->frequencia == -1) { //verificando se é stop word
+            strcpy(palavra, "null");
+            return;
+        }
 
         strcpy(palavra, palavra_copia);
-        return palavra;
     }
 }
 
@@ -133,9 +136,9 @@ int main () {
         inserir(hash_palavras, stop_word, M_p, 1);
     }
 
-    p_no *musica = malloc(M_p * sizeof(No));
+    p_no *musica = calloc(M_p, sizeof(No));
     while (scanf(" %s", palavra) != EOF) {
-        strcpy(palavra, arruma_palavra(palavra, hash_palavras, M_p));
+        arruma_palavra(palavra, hash_palavras, M_p);
         if (strcmp(palavra, "null") != 0) { //se de fato for uma palavra
             indice = retorna_indice(hash_palavras, palavra, M_p);
             if (indice == -8) { //se ainda não estiver no hash
