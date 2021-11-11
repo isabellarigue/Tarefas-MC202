@@ -9,6 +9,7 @@ typedef struct {
 } No;
 typedef No * p_no;
 
+/* Retorna o valor do hash. */
 int hash(char *chave, int M) {  
     int i, n = 0;
     for (i = 0; i < strlen(chave); i++)
@@ -16,19 +17,14 @@ int hash(char *chave, int M) {
     return n;
 }
 
-int eh_primo(int num) {
-    for (int i = 2; i <= num / 2; i++) 
-        if (num % i == 0) 
-            return 0;
-    return 1;
+/* Libera a memoria alocada para um p_no vetor. */
+void destruir_vetor(p_no *vetor, int tam) {
+    for(int i = 0; i < tam; i++)
+        free(vetor[i]);
+    free(vetor);
 }
 
-int determinar_M(int n) {
-    while (! eh_primo(n) || n == 2)
-        n++;
-    return n;
-}
-
+/* Busca o indice de uma chave no vetor de hash. */
 int retorna_indice(p_no *t, char *chave, int M) {
     int n = hash(chave, M); 
     if (t[n] != NULL && strcmp(t[n]->chave, chave) == 0)
@@ -44,6 +40,7 @@ int retorna_indice(p_no *t, char *chave, int M) {
     return -8; //palavra não esta no hashing
 }
 
+/* Insere uma chave no vetor de hash. */
 void inserir(p_no *t, char *chave, int M, int eh_stop_word) { 
     int n = hash(chave, M); 
     p_no novo = malloc(sizeof(No));
@@ -57,6 +54,7 @@ void inserir(p_no *t, char *chave, int M, int eh_stop_word) {
     t[n] = novo;
 }
 
+/* Retorna a palavra no formato pedido no enunciado, caso não seja possível devolve null. */
 char *arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
     int tamanho = strlen(palavra), j = 0;
     if (tamanho == 1 || palavra[0] == '\0') { //apenas um caractere não é considerado palavra
@@ -80,8 +78,8 @@ char *arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
     }
 }
 
+/* Organiza o vetor decrescentemente de acordo com os valores de frequencia. */
 void merge_frequencias(p_no *v, int l, int m, int r, int max, p_no *hash_palavras, int M) {
-    //organizando em ordem decrescente
     p_no *aux = malloc(max *sizeof(p_no));
     int i = l, j = m + 1, k = 0;
     /*intercala*/
@@ -92,7 +90,7 @@ void merge_frequencias(p_no *v, int l, int m, int r, int max, p_no *hash_palavra
             aux[k++] = v[i++];
         else if (hash_palavras[indice_i]->frequencia < hash_palavras[indice_j]->frequencia)
             aux[k++] = v[j++];
-        else { //mesma frequencia, o desempate é por ordem alfabetica
+        else { //se for a mesma frequencia, o desempate é por ordem alfabetica
             if(strcmp(hash_palavras[indice_i]->chave, hash_palavras[indice_j]->chave) < 0)
                 aux[k++] = v[i++];
             else
@@ -111,6 +109,7 @@ void merge_frequencias(p_no *v, int l, int m, int r, int max, p_no *hash_palavra
     free(aux);
 }
 
+/* Algoritmo MergeSort de ordenação. */
 void mergesort_frequencias(p_no *v, int l, int r, int max, p_no *hash_palavras, int M) {
     int m = (l + r) / 2;
     if (l < r) {
@@ -122,27 +121,19 @@ void mergesort_frequencias(p_no *v, int l, int r, int max, p_no *hash_palavras, 
     }
 }
 
-void destruir_vetor(p_no *vetor, int tam) {
-    for(int i = 0; i < tam; i++)
-        free(vetor[i]);
-    
-    free(vetor);
-}
-
 int main () {
-    int n, m, i = 0, M_p, indice;
+    int n, m, i = 0, M_p = 10007, indice;
     char stop_word[51], palavra[51];
     scanf("%d", &n);
     scanf("%d", &m);
 
-    M_p = determinar_M(10000);
     p_no *hash_palavras = calloc(M_p, sizeof(No));
     for (int k = 0; k < m; k++) {
         scanf("%s", stop_word);
         inserir(hash_palavras, stop_word, M_p, 1);
     }
 
-    p_no *musica = malloc(n * sizeof(No));
+    p_no *musica = malloc(M_p * sizeof(No));
     while (scanf(" %s", palavra) != EOF) {
         strcpy(palavra, arruma_palavra(palavra, hash_palavras, M_p));
         if (strcmp(palavra, "null") != 0) { //se de fato for uma palavra
@@ -162,7 +153,7 @@ int main () {
         printf("%s %d\n", musica[j]->chave, hash_palavras[retorna_indice(hash_palavras, musica[j]->chave, M_p)]->frequencia);
     
     destruir_vetor(hash_palavras, M_p);
-    destruir_vetor(musica, i);
+    destruir_vetor(musica, M_p);
 
     return 0;
 }
