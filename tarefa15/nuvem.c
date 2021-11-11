@@ -17,9 +17,9 @@ int hash(char *chave, int M) {
     return n;
 }
 
-/* Libera a memoria alocada para um p_no vetor. */
-void destruir_vetor(p_no *vetor, int tam) {
-    for(int i = 0; i < tam; i++)
+/* Libera a memoria alocada para um p_no vetor, sendo max a qtd espaços alocados. */
+void destruir_vetor(p_no *vetor, int max) {
+    for(int i = 0; i < max; i++)
         free(vetor[i]);
     free(vetor);
 }
@@ -57,28 +57,24 @@ void inserir(p_no *t, char *chave, int M, int eh_stop_word) {
 /* Retorna a palavra no formato pedido no enunciado, caso não seja possível devolve null. */
 void arruma_palavra(char *palavra, p_no *hash_palavras, int M_p) {
     int j = 0;
-    if (strlen(palavra) == 1) { //apenas um caractere não é considerado palavra
+    char palavra_copia[51];
+    for (int i = 0; palavra[i] != '\0'; i++) 
+        if(isalpha(palavra[i])) //retirando - ' e outros caracteres especiais
+            palavra_copia[j++] = tolower(palavra[i]); 
+    palavra_copia[j] = '\0';
+
+    if ((strlen(palavra_copia)) <= 1) {  //apenas um caractere não é considerado palavra
         strcpy(palavra, "null");
-    } else {
-        char palavra_copia[51];
-        for (int i = 0; palavra[i] != '\0'; i++) 
-            if(isalpha(palavra[i])) //retirando - ' e outros caracteres especiais
-                palavra_copia[j++] = tolower(palavra[i]); 
-        palavra_copia[j] = '\0';
-
-        if ((strlen(palavra_copia)) <= 1) {  //verificando se ainda sobrou algo para ser a palavra
-            strcpy(palavra, "null");
-            return;
-        }
-
-        int indice = retorna_indice(hash_palavras, palavra_copia, M_p);
-        if (indice > 0 && hash_palavras[indice]->frequencia == -1) { //verificando se é stop word
-            strcpy(palavra, "null");
-            return;
-        }
-
-        strcpy(palavra, palavra_copia);
+        return;
     }
+
+    int indice = retorna_indice(hash_palavras, palavra_copia, M_p);
+    if (indice > 0 && hash_palavras[indice]->frequencia == -1) { //verificando se é stop word
+        strcpy(palavra, "null");
+        return;
+    }
+
+    strcpy(palavra, palavra_copia);
 }
 
 /* Organiza o vetor decrescentemente de acordo com os valores de frequencia. */
@@ -136,7 +132,7 @@ int main () {
         inserir(hash_palavras, stop_word, M_p, 1);
     }
 
-    p_no *musica = calloc(M_p, sizeof(No));
+    p_no *musica = malloc(M_p * sizeof(No));
     while (scanf(" %s", palavra) != EOF) {
         arruma_palavra(palavra, hash_palavras, M_p);
         if (strcmp(palavra, "null") != 0) { //se de fato for uma palavra
@@ -156,7 +152,7 @@ int main () {
         printf("%s %d\n", musica[j]->chave, hash_palavras[retorna_indice(hash_palavras, musica[j]->chave, M_p)]->frequencia);
     
     destruir_vetor(hash_palavras, M_p);
-    destruir_vetor(musica, M_p);
+    destruir_vetor(musica, i);
 
     return 0;
 }
