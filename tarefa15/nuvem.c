@@ -20,18 +20,20 @@ int hash(char *chave) {
 
 /* Busca o indice de uma chave no vetor de hash. */
 int retorna_indice(p_no *t, char *chave) {
-    int n = hash(chave); 
+    int n = hash(chave), contador = 0; 
     if (t[n] != NULL && strcmp(t[n]->chave, chave) == 0)
         return n;
     else {
-        for (int i = n + 1; i < M_p; i++)
-            if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
-                return i;
-        for (int i = 0; i < n; i++)  //tem q voltar para o modulo M_p
-            if (t[i]->chave != NULL && strcmp(t[i]->chave, chave) == 0)
-                return i;
+        n = (n + ((M_p)/2) + 1) % M_p;
+        while ((t[n]->chave == NULL || strcmp(t[n]->chave, chave) != 0) && contador < M_p) {
+            n = (n + ((M_p)/2) + 1) % M_p;
+            contador++;
+        }
+        if (contador < M_p)
+            return n;
+        else
+            return -8; //palavra não esta no hashing
     }
-    return -8; //palavra não esta no hashing
 }
 
 /* Insere uma chave no vetor de hash. */
