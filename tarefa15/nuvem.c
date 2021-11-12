@@ -2,85 +2,56 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#define MAX 10007
+#define M_p 10007
 
-typedef struct No {
-    char chave[10];
+typedef struct {
+    char chave[51];
     int frequencia;
-    struct No *prox;
 } No;
 typedef No * p_no;
-
-typedef struct Hash {
-    p_no vetor[MAX];
-} Hash;
-typedef Hash * p_hash;
 
 /* Retorna o valor do hash. */
 int hash(char *chave) {  
     int i, n = 0;
     for (i = 0; i < strlen(chave); i++)
-        n = (256 * n + chave[i]) % MAX;
+        n = (256 * n + chave[i]) % M_p;
     return n;
 }
 
-/* Cria e inicializa uma tabela de hash. */
-p_hash criar_hash() {
-    p_hash t = malloc(sizeof(Hash));
-    for(int i = 0; i < MAX; i++)
-        t->vetor[i] = NULL; 
-    return t;
-}
-
-/* Insere um elemento em uma lista ligada. */
-p_no inserir_lista(p_no lista, char *chave, int frequencia) {
-    p_no novo = malloc(sizeof(No));
-    strcpy(novo->chave, chave);
-    novo->frequencia = frequencia;
-    novo->prox = lista;
-    return novo;
-}
-
-/* Busca um elemento em uma lista ligada. */
-p_no buscar_lista(p_no lista, char *chave) {
-    for (p_no atual = lista; atual != NULL; atual = atual->prox) 
-        if (strcmp(atual->chave, chave) == 0)
-            return atual;
-    return NULL; 
-}
-
-/* Libera a memória alocada para uma lista ligada. */
-void destruir_lista(p_no lista) {
-    if (lista != NULL) {
-        destruir_lista(lista->prox);
-        free(lista);
+/* Busca o indice de uma chave no vetor de hash. */
+int retorna_indice(p_no *t, char *chave) {
+    int n = hash(chave), contador = 0; 
+    if (t[n] != NULL && strcmp(t[n]->chave, chave) == 0)
+        return n;
+    else {
+        n = (n + ((M_p)/2) + 1) % M_p;
+        while ((t[n]->chave == NULL || strcmp(t[n]->chave, chave) != 0) && contador < M_p) {
+            n = (n + ((M_p)/2) + 1) % M_p;
+            contador++;
+        }
+        if (contador < M_p)
+            return n;
+        else
+            return -8; //palavra não esta no hashing
     }
 }
 
-/* Insere um elemento no hash. */
-void inserir(p_hash t, char *chave, int frequencia) {
-    int n = hash(chave);
-    t->vetor[n] = inserir_lista(t->vetor[n], chave, frequencia);
-}
-
-/* Busca a frequencia de uma chave no vetor de hash. */
-int retorna_frequencia(p_hash t, char *chave) {
-    int n = hash(chave);
-    p_no busca = (buscar_lista(t->vetor[n], chave));
-    if (busca != NULL)
-        return busca->frequencia;
-    return -8; //palavra não esta no hash
-}
-
-/* Busca um elemento no vetor de hash. */
-p_no buscar_elemento(p_hash t, char *chave) {
-    int n = hash(chave);
-    p_no elemento = (buscar_lista(t->vetor[n], chave));
-    return elemento;  
+/* Insere uma chave no vetor de hash. */
+void inserir(p_no *t, char *chave, int eh_stop_word) { 
+    int n = hash(chave); 
+    p_no novo = malloc(sizeof(No));
+    strcpy(novo->chave, chave);
+    if (eh_stop_word)
+        novo->frequencia = - 1;
+    else
+        novo->frequencia = 1;
+    while (t[n] != 0) //procurando um lugar livre
+        n = (n + ((M_p)/2) + 1) % M_p; //hashing duplo
+    t[n] = novo;
 }
 
 /* Retorna a palavra no formato pedido no enunciado, caso não seja possível devolve null. */
-void arruma_palavra(char *palavra, p_hash hash_palavras) {
+void arruma_palavra(char *palavra, p_no *hash_palavras) {
     int j = 0;
     char palavra_copia[51];
     for (int i = 0; palavra[i] != '\0'; i++) 
@@ -92,9 +63,9 @@ void arruma_palavra(char *palavra, p_hash hash_palavras) {
         strcpy(palavra, "null");
         return;
     }
-    
-    int frequencia = retorna_frequencia(hash_palavras, palavra_copia);
-    if (frequencia == -1) { //verificando se é stop word
+
+    int indice = retorna_indice(hash_palavras, palavra_copia);
+    if (indice > 0 && hash_palavras[indice]->frequencia == -1) { //verificando se é stop word
         strcpy(palavra, "null");
         return;
     }
@@ -103,19 +74,19 @@ void arruma_palavra(char *palavra, p_hash hash_palavras) {
 }
 
 /* Organiza o vetor decrescentemente de acordo com os valores de frequencia. */
-void merge_frequencias(char v[][51], int l, int m, int r, p_hash hash_palavras) {
-    char aux[MAX][51];
+void merge_frequencias(char v[][51], int l, int m, int r, p_no *hash_palavras) {
+    char aux[M_p][51];
     int i = l, j = m + 1, k = 0;
     /*intercala*/
     while (i <= m && j <= r) {
-        int frequencia_i = retorna_frequencia(hash_palavras, v[i]);
-        int frequencia_j = retorna_frequencia(hash_palavras, v[j]);
-        if (frequencia_i > frequencia_j)
+        int indice_i = retorna_indice(hash_palavras, v[i]);
+        int indice_j = retorna_indice(hash_palavras, v[j]);
+        if (hash_palavras[indice_i]->frequencia > hash_palavras[indice_j]->frequencia)
             strcpy(aux[k++], v[i++]);
-        else if (frequencia_i < frequencia_j)
+        else if (hash_palavras[indice_i]->frequencia < hash_palavras[indice_j]->frequencia)
             strcpy(aux[k++], v[j++]);
         else { //se for a mesma frequencia, o desempate é por ordem alfabetica
-            if(strcmp(v[i], v[j]) < 0)
+            if(strcmp(hash_palavras[indice_i]->chave, hash_palavras[indice_j]->chave) < 0)
                 strcpy(aux[k++], v[i++]);
             else
                strcpy(aux[k++], v[j++]);
@@ -132,7 +103,7 @@ void merge_frequencias(char v[][51], int l, int m, int r, p_hash hash_palavras) 
 }
 
 /* Algoritmo MergeSort de ordenação. */
-void mergesort_frequencias(char v[][51], int l, int r, p_hash hash_palavras) {
+void mergesort_frequencias(char v[][51], int l, int r, p_no *hash_palavras) {
     int m = (l + r) / 2;
     if (l < r) {
         /*divisão*/
@@ -144,49 +115,49 @@ void mergesort_frequencias(char v[][51], int l, int r, p_hash hash_palavras) {
 }
 
 /* Le as entradas da letra de musica, inserindo as palavras no hash e em um vetor como cópia. */
-int leitura(char musica[][51], p_hash hash_palavras) {
-    int i = 0;
+int leitura(char musica[][51], p_no *hash_palavras) {
+    int indice, i = 0;
     char palavra[51];
     while (scanf(" %s", palavra) != EOF) {
         arruma_palavra(palavra, hash_palavras);
         if (strcmp(palavra, "null") != 0) { //se de fato for uma palavra
-            p_no elemento = buscar_elemento(hash_palavras, palavra);
-            if (elemento == NULL) { //se ainda não estiver no hash
+            indice = retorna_indice(hash_palavras, palavra);
+            if (indice == -8) { //se ainda não estiver no hash
                 strcpy(musica[i++], palavra); //mantendo um vetor com a copia das palavras
-                inserir(hash_palavras, palavra, 1);
+                inserir(hash_palavras, palavra, 0);
             } else 
-                elemento->frequencia += 1; 
+                hash_palavras[indice]->frequencia += 1; 
         }
     }
-    return i; //quantidade de palavras diferentes
+    return i;
 }
 
-/* Libera a memoria alocada para uma tabela de hash. */
-void destruir_hash(p_hash t) {
-    for(int i = 0; i < MAX; i++)
-        destruir_lista(t->vetor[i]);
-    free(t);    
+/* Libera a memoria alocada para um p_no vetor, sendo max a qtd de espaços alocados. */
+void destruir_vetor(p_no *vetor, int max) {
+    for(int i = 0; i < max; i++)
+        free(vetor[i]);
+    free(vetor);
 }
 
-int main() {
+int main () {
     int n, m, i = 0;
-    char stop_word[51], musica[MAX][51];
+    char stop_word[51], musica[M_p][51];
     scanf("%d", &n);
     scanf("%d", &m);
 
-    p_hash hash_palavras = criar_hash();
+    p_no *hash_palavras = calloc(M_p, sizeof(No));
     for (int k = 0; k < m; k++) {
         scanf("%s", stop_word);
-        inserir(hash_palavras, stop_word, -1);
+        inserir(hash_palavras, stop_word, 1);
     }
 
     i = leitura(musica, hash_palavras);
     
     mergesort_frequencias(musica, 0, i - 1, hash_palavras);
     for (int j = 0; j < 50; j++) 
-        printf("%s %d\n", musica[j], retorna_frequencia(hash_palavras, musica[j]));
-
-    destruir_hash(hash_palavras);
+        printf("%s %d\n", musica[j], hash_palavras[retorna_indice(hash_palavras, musica[j])]->frequencia);
+    
+    destruir_vetor(hash_palavras, M_p);
 
     return 0;
 }
