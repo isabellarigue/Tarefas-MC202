@@ -1,0 +1,9 @@
+armoraria-das-carniceiras
+arsenal-3
+cela-do-chefe
+corrida-dos-mortos-vivos
+cozinha-2
+escalada-da-perdicao
+palco-das-fadas
+quarto-dos-tolos
+saguao-2

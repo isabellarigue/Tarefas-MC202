@@ -1,0 +1,10 @@
+almoxarifado-do-chefe
+biblioteca-dos-tolos
+cela-da-perdicao
+cozinha-do-paladino
+escalada-dos-amaldicoados
+masmorra-da-dor
+masmorra-do-esquecimento
+poco-dos-zumbis
+quarto-dos-mercadores
+salto
