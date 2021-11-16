@@ -1,0 +1,12 @@
+5
+cidade01 367
+cidade02 347
+cidade03 205
+cidade04 411
+cidade05 427
+cidade01 cidade05 6
+cidade05 cidade02 3
+cidade04 cidade02 1
+cidade04 cidade03 2
+cidade03 cidade05 1
+cidade01 cidade02 4

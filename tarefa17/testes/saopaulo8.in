@@ -1,0 +1,38 @@
+20
+SaoPaulo 1000000
+Campinas 5000
+SaoCaetano 300
+Sorocaba 200
+Tiete 100
+Amparo 1540
+Sumare 820
+Atibaia 11555
+Capivari 888
+Tatui 25
+Holambra 88
+Limeira 6006
+Piracicaba 1242
+Socorro 100
+AguasDeLindoia 900
+Braganca 10
+SJC 124
+Guarulhos 144
+SaoRoque 177
+Votorantim 119
+SaoRoque Tatui 9.76
+Tatui Socorro 87.3
+Tatui Limeira 56.2
+Limeira Socorro 452.3
+Socorro Socorro 784
+Holambra Braganca 22.31
+Braganca SJC 9871
+SJC Votorantim 0.4
+SaoRoque Piracicaba 877
+Piracicaba SaoPaulo 213
+Capivari Atibaia 900
+Sumare Capivari 81.4
+Sumare Tiete 76
+SaoCaetano Campinas 456.9
+Amparo Votorantim 76.4
+Guarulhos AguasDeLindoia 2
+Amparo Sorocaba 56

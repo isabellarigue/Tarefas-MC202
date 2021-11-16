@@ -1,0 +1,12 @@
+Salvador 3.94
+Esplanada 14.92
+Ubata 103.04
+RuyBarbosa 103.22
+Mairi 103.60
+FeiraDeSantana 103.93
+LauroDeFreitas 117.56
+Santaluz 118.15
+Jacobina 133.12
+Araci 201.24
+CapimGrosso 288.22
+Amargosa 1999.00

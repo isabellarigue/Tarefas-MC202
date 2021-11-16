@@ -1,0 +1,29 @@
+15
+FeiraDeSantana 90
+Alagoinhas 1000
+LauroDeFreitas 100
+CapimGrosso 100
+BarraGrande 100
+Santaluz 100
+Salvador 100
+Serrinha 100
+Jacobina 100
+Esplanada 100
+RuyBarbosa 100
+Amargosa 100
+Mairi 100
+Ubata 100
+Araci 100
+Araci Mairi 88
+Araci RuyBarbosa 76
+RuyBarbosa Esplanada 788
+Esplanada Jacobina 87
+Jacobina Salvador 98
+Salvador Serrinha 98
+Serrinha Jacobina 100
+Jacobina Serrinha 871
+Jacobina Santaluz 1.2
+Santaluz Salvador 55
+BarraGrande CapimGrosso 10.5
+CapimGrosso Alagoinhas 75
+Alagoinhas FeiraDeSantana 15.7

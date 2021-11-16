@@ -1,0 +1,10 @@
+Campinas 117.42
+Amparo 124.22
+Tiete 125.15
+Sumare 126.70
+Atibaia 128.16
+SaoCaetano 196.46
+Sorocaba 204.00
+Tatui 215.29
+SaoPaulo 233.55
+Capivari 347.70

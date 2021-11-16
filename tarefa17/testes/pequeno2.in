@@ -1,0 +1,21 @@
+10
+cidade01 280
+cidade02 450
+cidade03 239
+cidade04 322
+cidade05 424
+cidade06 315
+cidade07 100
+cidade08 155
+cidade09 416
+cidade10 132
+cidade03 cidade04 6
+cidade06 cidade09 6
+cidade03 cidade05 5
+cidade03 cidade09 5
+cidade06 cidade07 5
+cidade06 cidade03 3
+cidade01 cidade02 5
+cidade03 cidade10 5
+cidade08 cidade10 4
+cidade10 cidade09 4

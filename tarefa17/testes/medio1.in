@@ -1,0 +1,85 @@
+20
+cidade01 3633
+cidade02 2897
+cidade03 1271
+cidade04 832
+cidade05 178
+cidade06 2489
+cidade07 2781
+cidade08 3382
+cidade09 2930
+cidade10 1975
+cidade11 598
+cidade12 574
+cidade13 4606
+cidade14 629
+cidade15 1003
+cidade16 2145
+cidade17 2459
+cidade18 2020
+cidade19 1124
+cidade20 4665
+cidade12 cidade16 7
+cidade05 cidade15 9
+cidade15 cidade01 7
+cidade03 cidade05 8
+cidade04 cidade08 3
+cidade06 cidade19 7
+cidade16 cidade10 6
+cidade17 cidade02 4
+cidade01 cidade08 9
+cidade17 cidade15 4
+cidade20 cidade19 6
+cidade18 cidade01 3
+cidade08 cidade12 4
+cidade19 cidade07 6
+cidade04 cidade19 3
+cidade16 cidade15 7
+cidade13 cidade20 2
+cidade07 cidade11 8
+cidade08 cidade11 5
+cidade17 cidade14 8
+cidade01 cidade09 4
+cidade12 cidade06 10
+cidade04 cidade16 8
+cidade18 cidade07 4
+cidade05 cidade12 8
+cidade16 cidade11 1
+cidade14 cidade13 4
+cidade12 cidade04 2
+cidade16 cidade07 6
+cidade04 cidade17 9
+cidade09 cidade06 2
+cidade20 cidade14 9
+cidade06 cidade10 2
+cidade03 cidade06 9
+cidade10 cidade13 4
+cidade10 cidade17 7
+cidade13 cidade02 5
+cidade06 cidade04 1
+cidade13 cidade03 10
+cidade19 cidade16 5
+cidade17 cidade08 8
+cidade09 cidade15 9
+cidade05 cidade02 10
+cidade01 cidade10 10
+cidade16 cidade14 2
+cidade14 cidade04 7
+cidade13 cidade17 7
+cidade20 cidade12 7
+cidade08 cidade18 8
+cidade18 cidade10 1
+cidade14 cidade08 8
+cidade02 cidade18 8
+cidade06 cidade16 3
+cidade08 cidade09 4
+cidade19 cidade08 1
+cidade09 cidade10 2
+cidade02 cidade08 3
+cidade10 cidade19 5
+cidade15 cidade18 1
+cidade07 cidade13 8
+cidade20 cidade01 6
+cidade14 cidade02 2
+cidade12 cidade18 3
+cidade05 cidade08 9
