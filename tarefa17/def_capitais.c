@@ -88,7 +88,9 @@ p_fp criar_filaprio(int tam) {
 }
 
 /* Libera a memoria alocada para a estrutura. */
-void destruir_fila(p_fp fila) {
+void destruir_fila(p_fp fila, int n) {
+    for (int i = 0; i < n; i++) 
+        free(fila->v[i]);
     free(fila->v);
     free(fila);
 }
@@ -182,7 +184,8 @@ int * dijkstra(p_grafo g, int s, p_no *cidades) {
                 }
             }
     }
-    destruir_fila(h);
+    free(h->indice);
+    destruir_fila(h, g->n);
     return pai;
 }
 
