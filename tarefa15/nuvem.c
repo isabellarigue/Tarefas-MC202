@@ -129,6 +129,7 @@ int leitura(char musica[][51], p_no *hash_palavras) {
                 hash_palavras[indice]->frequencia += 1; 
         }
     }
+    
     return i;
 }
 
